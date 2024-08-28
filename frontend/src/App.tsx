@@ -18,7 +18,7 @@ interface Comment {
   projectId: number;
   author: string;
   content: string;
-  timestamp: number;
+  timestamp: bigint;
 }
 
 Modal.setAppElement('#root');
@@ -183,7 +183,7 @@ const App: React.FC = () => {
           {comments.map((comment) => (
             <div key={comment.id} className="comment">
               <p>{comment.content}</p>
-              <small>{comment.author} - {new Date(comment.timestamp).toLocaleString()}</small>
+              <small>{comment.author} - {new Date(Number(comment.timestamp)).toLocaleString()}</small>
             </div>
           ))}
         </div>

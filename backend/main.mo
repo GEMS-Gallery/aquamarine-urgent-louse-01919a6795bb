@@ -1,7 +1,6 @@
 import Bool "mo:base/Bool";
 import Hash "mo:base/Hash";
 import Nat "mo:base/Nat";
-import Time "mo:base/Time";
 
 import Array "mo:base/Array";
 import Text "mo:base/Text";
@@ -9,6 +8,7 @@ import Int "mo:base/Int";
 import Float "mo:base/Float";
 import Debug "mo:base/Debug";
 import HashMap "mo:base/HashMap";
+import Time "mo:base/Time";
 
 actor {
   type Project = {
@@ -66,7 +66,7 @@ actor {
       projectId = projectId;
       author = author;
       content = content;
-      timestamp = Int.abs(Time.now());
+      timestamp = Time.now() / 1000000; // Convert nanoseconds to milliseconds
     };
     comments := Array.append(comments, [comment]);
     nextCommentId += 1;
