@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import Modal from 'react-modal';
 import { backend } from 'declarations/backend';
 
 interface Project {
@@ -12,9 +13,23 @@ interface Project {
   starred: boolean;
 }
 
+interface Comment {
+  id: number;
+  projectId: number;
+  author: string;
+  content: string;
+  timestamp: number;
+}
+
+Modal.setAppElement('#root');
+
 const App: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
+  const [newComment, setNewComment] = useState('');
   const location = useLocation();
 
   useEffect(() => {
@@ -27,6 +42,27 @@ const App: React.FC = () => {
       setProjects(result);
     } catch (error) {
       console.error('Error fetching projects:', error);
+    }
+  };
+
+  const fetchComments = async (projectId: number) => {
+    try {
+      const result = await backend.getComments(projectId);
+      setComments(result);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    }
+  };
+
+  const addComment = async () => {
+    if (selectedProject && newComment.trim()) {
+      try {
+        await backend.addComment(selectedProject.id, 'Anonymous', newComment.trim());
+        await fetchComments(selectedProject.id);
+        setNewComment('');
+      } catch (error) {
+        console.error('Error adding comment:', error);
+      }
     }
   };
 
@@ -83,14 +119,14 @@ const App: React.FC = () => {
         </div>
         <div className="header-buttons">
           <button className="btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
             Start Building
           </button>
           <button className="btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
               <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
             </svg>
@@ -130,17 +166,41 @@ const App: React.FC = () => {
             <Link to="/starred" className={`tab ${location.pathname === '/starred' ? 'active' : ''}`}>STARRED</Link>
           </div>
           <Routes>
-            <Route path="/" element={<ProjectList projects={filteredProjects.filter(p => p.featured)} />} />
-            <Route path="/latest" element={<ProjectList projects={[...filteredProjects].reverse()} />} />
-            <Route path="/starred" element={<ProjectList projects={filteredProjects.filter(p => p.starred)} />} />
+            <Route path="/" element={<ProjectList projects={filteredProjects.filter(p => p.featured)} onCommentClick={(project) => { setSelectedProject(project); setIsCommentModalOpen(true); fetchComments(project.id); }} />} />
+            <Route path="/latest" element={<ProjectList projects={[...filteredProjects].reverse()} onCommentClick={(project) => { setSelectedProject(project); setIsCommentModalOpen(true); fetchComments(project.id); }} />} />
+            <Route path="/starred" element={<ProjectList projects={filteredProjects.filter(p => p.starred)} onCommentClick={(project) => { setSelectedProject(project); setIsCommentModalOpen(true); fetchComments(project.id); }} />} />
           </Routes>
         </main>
       </div>
+      <Modal
+        isOpen={isCommentModalOpen}
+        onRequestClose={() => setIsCommentModalOpen(false)}
+        contentLabel="Comment Modal"
+        className="comment-modal"
+      >
+        <h2>Comments for {selectedProject?.title}</h2>
+        <div className="comment-list">
+          {comments.map((comment) => (
+            <div key={comment.id} className="comment">
+              <p>{comment.content}</p>
+              <small>{comment.author} - {new Date(comment.timestamp).toLocaleString()}</small>
+            </div>
+          ))}
+        </div>
+        <div className="comment-form">
+          <textarea
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Add a comment..."
+          />
+          <button onClick={addComment}>Submit Comment</button>
+        </div>
+      </Modal>
     </div>
   );
 };
 
-const ProjectList: React.FC<{ projects: Project[] }> = ({ projects }) => {
+const ProjectList: React.FC<{ projects: Project[], onCommentClick: (project: Project) => void }> = ({ projects, onCommentClick }) => {
   return (
     <div className="projects">
       {projects.map((project) => (
@@ -172,7 +232,7 @@ const ProjectList: React.FC<{ projects: Project[] }> = ({ projects }) => {
                 </svg>
                 Copy
               </button>
-              <button className="project-action">
+              <button className="project-action" onClick={() => onCommentClick(project)}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                 </svg>

@@ -8,7 +8,17 @@ type Project =
    starred: bool;
    title: text;
  };
+type Comment = 
+ record {
+   author: text;
+   content: text;
+   id: nat;
+   projectId: nat;
+   timestamp: int;
+ };
 service : {
+  addComment: (nat, text, text) -> (nat);
+  getComments: (nat) -> (vec Comment) query;
   getProjects: () -> (vec Project) query;
   getProjectsByCategory: (text) -> (vec Project) query;
   getProjectsByTab: (text) -> (vec Project) query;

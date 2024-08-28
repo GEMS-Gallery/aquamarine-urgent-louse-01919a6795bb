@@ -1,4 +1,11 @@
 export const idlFactory = ({ IDL }) => {
+  const Comment = IDL.Record({
+    'id' : IDL.Nat,
+    'content' : IDL.Text,
+    'author' : IDL.Text,
+    'projectId' : IDL.Nat,
+    'timestamp' : IDL.Int,
+  });
   const Project = IDL.Record({
     'id' : IDL.Nat,
     'title' : IDL.Text,
@@ -9,6 +16,8 @@ export const idlFactory = ({ IDL }) => {
     'image' : IDL.Text,
   });
   return IDL.Service({
+    'addComment' : IDL.Func([IDL.Nat, IDL.Text, IDL.Text], [IDL.Nat], []),
+    'getComments' : IDL.Func([IDL.Nat], [IDL.Vec(Comment)], ['query']),
     'getProjects' : IDL.Func([], [IDL.Vec(Project)], ['query']),
     'getProjectsByCategory' : IDL.Func(
         [IDL.Text],
