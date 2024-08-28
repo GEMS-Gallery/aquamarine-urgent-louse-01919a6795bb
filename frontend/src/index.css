@@ -63,6 +63,13 @@ header {
 
 .btn svg {
     margin-right: 0.5rem;
+    fill: var(--primary-color);
+    stroke: var(--primary-color);
+}
+
+.btn:hover svg {
+    fill: var(--background-color);
+    stroke: var(--background-color);
 }
 
 .search-bar input {
