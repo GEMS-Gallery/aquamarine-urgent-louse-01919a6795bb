@@ -6,6 +6,8 @@
     --text-color: #333333;
     --text-light: #666666;
     --card-hover-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    --tab-active-color: #007bff;
+    --tab-hover-color: #f0f0f0;
 }
 
 * {
@@ -142,11 +144,24 @@ header {
     cursor: pointer;
     border-bottom: 2px solid transparent;
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.tab:hover {
+    background-color: var(--tab-hover-color);
 }
 
 .tab.active {
-    border-bottom-color: var(--primary-color);
-    font-weight: bold;
+    border-bottom-color: var(--tab-active-color);
+    color: var(--tab-active-color);
+}
+
+.tab svg {
+    margin-right: 0.5rem;
 }
 
 .projects {

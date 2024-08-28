@@ -131,9 +131,25 @@ const App: React.FC = () => {
         </aside>
         <main className="main-content">
           <div className="tabs">
-            <Link to="/" className={`tab ${location.pathname === '/' ? 'active' : ''}`}>FEATURED</Link>
-            <Link to="/latest" className={`tab ${location.pathname === '/latest' ? 'active' : ''}`}>LATEST</Link>
-            <Link to="/starred" className={`tab ${location.pathname === '/starred' ? 'active' : ''}`}>STARRED</Link>
+            <Link to="/" className={`tab ${location.pathname === '/' ? 'active' : ''}`}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              FEATURED
+            </Link>
+            <Link to="/latest" className={`tab ${location.pathname === '/latest' ? 'active' : ''}`}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+              </svg>
+              LATEST
+            </Link>
+            <Link to="/starred" className={`tab ${location.pathname === '/starred' ? 'active' : ''}`}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              STARRED
+            </Link>
           </div>
           <Routes>
             <Route path="/" element={<ProjectList projects={filteredProjects.filter(p => p.featured)} />} />
