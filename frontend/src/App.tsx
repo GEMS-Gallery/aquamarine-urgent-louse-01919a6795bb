@@ -201,6 +201,19 @@ const App: React.FC = () => {
 };
 
 const ProjectList: React.FC<{ projects: Project[], onCommentClick: (project: Project) => void }> = ({ projects, onCommentClick }) => {
+  const [copiedStates, setCopiedStates] = useState<{ [key: number]: boolean }>({});
+
+  const handleCopy = (project: Project) => {
+    navigator.clipboard.writeText(project.title).then(() => {
+      setCopiedStates({ ...copiedStates, [project.id]: true });
+      setTimeout(() => {
+        setCopiedStates({ ...copiedStates, [project.id]: false });
+      }, 2000);
+    }).catch(err => {
+      console.error('Failed to copy text: ', err);
+    });
+  };
+
   return (
     <div className="projects">
       {projects.map((project) => (
@@ -225,12 +238,12 @@ const ProjectList: React.FC<{ projects: Project[], onCommentClick: (project: Pro
                 </svg>
                 GitHub
               </button>
-              <button className="project-action">
+              <button className={`project-action ${copiedStates[project.id] ? 'copied' : ''}`} onClick={() => handleCopy(project)}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                   <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                 </svg>
-                Copy
+                {copiedStates[project.id] ? 'Copied!' : 'Copy'}
               </button>
               <button className="project-action" onClick={() => onCommentClick(project)}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

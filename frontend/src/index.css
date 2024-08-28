@@ -291,3 +291,13 @@ header {
 .comment-form button:hover {
     opacity: 0.9;
 }
+
+.project-action.copied {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.project-action.copied svg {
+    fill: var(--primary-color);
+    stroke: var(--primary-color);
+}
