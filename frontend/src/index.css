@@ -1,11 +1,11 @@
 :root {
-    --primary-color: #0070f3;
-    --secondary-color: #0070f3;
+    --primary-color: #000;
+    --secondary-color: #333;
     --background-color: #fff;
     --text-color: #333;
     --text-light: #666;
     --border-color: #eaeaea;
-    --card-hover-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    --card-hover-shadow: 0 4px 12px rgba(0,0,0,0.1);
     --transition: all 0.2s ease;
 }
 
@@ -44,18 +44,25 @@ header {
 
 .btn {
     padding: 0.5rem 1rem;
-    border: none;
-    background-color: var(--primary-color);
-    color: var(--background-color);
+    border: 1px solid var(--primary-color);
+    background-color: var(--background-color);
+    color: var(--primary-color);
     font-size: 0.9rem;
     font-weight: 500;
     border-radius: 5px;
     cursor: pointer;
     transition: var(--transition);
+    display: flex;
+    align-items: center;
 }
 
 .btn:hover {
-    opacity: 0.9;
+    background-color: var(--primary-color);
+    color: var(--background-color);
+}
+
+.btn svg {
+    margin-right: 0.5rem;
 }
 
 .search-bar input {
@@ -95,10 +102,16 @@ header {
     padding: 0.5rem 0;
     cursor: pointer;
     transition: var(--transition);
+    display: flex;
+    align-items: center;
 }
 
 .category-item:hover {
     color: var(--primary-color);
+}
+
+.category-item svg {
+    margin-right: 0.5rem;
 }
 
 .main-content {
@@ -212,8 +225,14 @@ header {
     color: var(--text-light);
     font-size: 0.9rem;
     transition: var(--transition);
+    display: flex;
+    align-items: center;
 }
 
 .project-action:hover {
     color: var(--primary-color);
+}
+
+.project-action svg {
+    margin-right: 0.3rem;
 }
